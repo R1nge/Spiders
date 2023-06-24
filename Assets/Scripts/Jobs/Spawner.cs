@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public class SpawnerJob : MonoBehaviour
+public class Spawner : MonoBehaviour
 {
     [SerializeField] private int spawnAmount;
-    [SerializeField] private SpiderMove[] spiders;
+    [SerializeField] private GameObject[] spiders;
 
     private void Awake()
     {

@@ -32,8 +32,8 @@ public class SpiderMove : MonoBehaviour
 
     private void Update()
     {
-        var chachedTranform = transform;
-        var screenPoint = _camera.WorldToScreenPoint(chachedTranform.position);
+        var cachedTransform = transform;
+        var screenPoint = _camera.WorldToScreenPoint(cachedTransform.position);
 
         var job = new SpiderJob(
             _targetDirection,
@@ -45,8 +45,8 @@ public class SpiderMove : MonoBehaviour
             screenPoint,
             _camera.pixelWidth,
             _camera.pixelHeight,
-            chachedTranform.rotation,
-            chachedTranform.position,
+            cachedTransform.rotation,
+            cachedTransform.position,
             _coolDownResult,
             _targetDirectionResult,
             _positionResult,

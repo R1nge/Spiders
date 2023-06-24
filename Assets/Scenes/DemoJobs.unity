@@ -167,10 +167,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed942f3db93e45628115f8327dbcab9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnAmount: 1000
+  spawnAmount: 8500
   spiders:
-  - {fileID: 2852997054373628141, guid: 0b85b6440e555e34b9bff438e318f6af, type: 3}
-  - {fileID: 4951586455470305836, guid: 9d226597d2301e24f8808efad621020a, type: 3}
+  - {fileID: 4873128729425267588, guid: 0b85b6440e555e34b9bff438e318f6af, type: 3}
+  - {fileID: 2342053035162251589, guid: 9d226597d2301e24f8808efad621020a, type: 3}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
