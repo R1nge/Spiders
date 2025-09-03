@@ -2,6 +2,7 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
+using UnityEngine.Jobs;
 using Random = Unity.Mathematics.Random;
 
 [BurstCompile]
@@ -12,17 +13,16 @@ public struct SpiderJob : IJob
     private readonly float _moveSpeed;
     private readonly float _rotationSpeed;
     private readonly float _deltaTime;
-    private readonly uint _seed;
     private readonly Vector2 _screenPoint;
     private readonly float _screenHeight;
     private readonly float _screenWidth;
     private Quaternion _rotation;
-    private Vector2 _position;
-
-    private NativeArray<float> _coolDownResult;
-    private NativeArray<Vector2> _targetDirectionResult;
-    private NativeArray<Vector2> _positionResult;
-    private NativeArray<Quaternion> _rotationResult;
+    private readonly Vector2 _position;
+    private Unity.Mathematics.Random _random;
+    [WriteOnly] private NativeArray<float> _coolDownResult;
+    [WriteOnly] private NativeArray<Vector2> _targetDirectionResult;
+    [WriteOnly] private NativeArray<Vector2> _positionResult;
+    [WriteOnly] private NativeArray<Quaternion> _rotationResult;
 
     public SpiderJob(
         Vector2 targetDirection,
@@ -46,7 +46,6 @@ public struct SpiderJob : IJob
         _moveSpeed = moveSpeed;
         _rotationSpeed = rotationSpeed;
         _deltaTime = deltaTime;
-        _seed = seed;
         _screenPoint = screenPoint;
         _screenWidth = screenWidth;
         _screenHeight = screenHeight;
@@ -56,6 +55,7 @@ public struct SpiderJob : IJob
         _targetDirectionResult = targetDirectionResult;
         _positionResult = positionResult;
         _rotationResult = rotationResult;
+        _random = new Unity.Mathematics.Random(seed);
     }
 
 
@@ -84,12 +84,11 @@ public struct SpiderJob : IJob
     {
         if (_changeDirectionCooldown <= 0)
         {
-            var random = new Random(_seed);
-            float newAngle = random.NextFloat(-90f, 90f);
+            float newAngle = _random.NextFloat(-90f, 90f);
             Quaternion rotation = Quaternion.AngleAxis(newAngle, Vector3.forward);
             _targetDirection = rotation * _targetDirection;
 
-            _changeDirectionCooldown = random.NextFloat(1f, 5f);
+            _changeDirectionCooldown = _random.NextFloat(1f, 5f);
         }
 
         _coolDownResult[0] = _changeDirectionCooldown;
@@ -114,15 +113,12 @@ public struct SpiderJob : IJob
     {
         var targetRotation = Quaternion.LookRotation(Vector3.forward, _targetDirection);
         _rotation = Quaternion.RotateTowards(_rotation, targetRotation, _rotationSpeed * _deltaTime);
-
         _rotationResult[0] = _rotation;
     }
 
     private void SetPosition()
     {
         Vector2 positionChange = _rotation * Vector2.up * _moveSpeed * _deltaTime;
-        _position += positionChange;
-
-        _positionResult[0] = _position;
+        _positionResult[0] = _position + positionChange;
     }
 }

@@ -1,6 +1,8 @@
-﻿using Unity.Collections;
+﻿using System;
+using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class SpiderMove : MonoBehaviour
 {
@@ -9,6 +11,7 @@ public class SpiderMove : MonoBehaviour
     private Camera _camera;
     private Vector2 _targetDirection;
     private float _coolDown;
+    private Transform _cachedTransform;
 
     private NativeArray<float> _coolDownResult;
     private NativeArray<Vector2> _targetDirectionResult;
@@ -19,6 +22,7 @@ public class SpiderMove : MonoBehaviour
 
     private void Awake()
     {
+        _cachedTransform = transform;
         _camera = Camera.main;
         _targetDirection = Vector2.up;
         _moveSpeed = Random.Range(2f, 6f);
@@ -32,8 +36,7 @@ public class SpiderMove : MonoBehaviour
 
     private void Update()
     {
-        var cachedTransform = transform;
-        var screenPoint = _camera.WorldToScreenPoint(cachedTransform.position);
+        var screenPoint = _camera.WorldToScreenPoint(_cachedTransform.position);
 
         var job = new SpiderJob(
             _targetDirection,
@@ -41,12 +44,12 @@ public class SpiderMove : MonoBehaviour
             _moveSpeed,
             _rotationSpeed,
             Time.deltaTime,
-            (uint)Random.Range(1, 1000),
+            (uint)Entrypoint.Instance.RandomIndex,
             screenPoint,
             _camera.pixelWidth,
             _camera.pixelHeight,
-            cachedTransform.rotation,
-            cachedTransform.position,
+            _cachedTransform.rotation,
+            _cachedTransform.position,
             _coolDownResult,
             _targetDirectionResult,
             _positionResult,
