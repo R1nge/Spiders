@@ -4,9 +4,9 @@ public class Spawner : MonoBehaviour
 {
     [SerializeField] private GameObject[] spiders;
 
-    private void Awake()
+    private void Start()
     {
-        for (int i = 0; i < Entrypoint.SpidersCount; i++)
+        for (int i = 0; i < Entrypoint.Instance.SpidersCount; i++)
         {
             var spiderIndex = Random.Range(0, spiders.Length);
             var rotation = Quaternion.identity;
