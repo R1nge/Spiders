@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace MorpehECS
 {
+    
     [Serializable]
     public struct SpiderMoveComponent : IComponent
     {

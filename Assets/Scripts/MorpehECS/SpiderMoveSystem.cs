@@ -12,21 +12,27 @@ namespace MorpehECS
     public class SpiderMoveSystem : UpdateSystem
     {
         private Filter _moveFilter;
+        private Stash<SpiderMoveComponent> _spiderMoveStash;
+
         private Camera _camera;
         private float _screenWidth, _screenHeight;
 
         public override void OnAwake()
         {
-            _moveFilter = World.Filter.With<SpiderMoveComponent>();
+            ComponentId<SpiderMoveComponent>.StashSize = Entrypoint.SpidersCount;
+            
+            _moveFilter = World.Filter.With<SpiderMoveComponent>().Build();
+            _spiderMoveStash = World.GetStash<SpiderMoveComponent>();
             _camera = Camera.main;
             _screenWidth = _camera.pixelWidth;
             _screenHeight = _camera.pixelHeight;
 
             foreach (var entity in _moveFilter)
             {
-                entity.GetComponent<SpiderMoveComponent>().moveSpeed = Random.Range(2f, 6f);
-                entity.GetComponent<SpiderMoveComponent>().rotateSpeed = Random.Range(90f, 180f);
-                entity.GetComponent<SpiderMoveComponent>().direction = Vector2.up;
+                ref var spiderMoveComponent = ref _spiderMoveStash.Get(entity);
+                spiderMoveComponent.moveSpeed = Random.Range(2f, 6f);
+                spiderMoveComponent.rotateSpeed = Random.Range(90f, 180f);
+                spiderMoveComponent.direction = Vector2.up;
             }
         }
 
@@ -34,7 +40,7 @@ namespace MorpehECS
         {
             foreach (var entity in _moveFilter)
             {
-                ref var move = ref entity.GetComponent<SpiderMoveComponent>();
+                ref var move = ref _spiderMoveStash.Get(entity);
                 var screenPoint = _camera.WorldToScreenPoint(move.transform.position);
                 var speed = move.moveSpeed;
                 TickTimer(ref move, deltaTime);
@@ -54,7 +60,7 @@ namespace MorpehECS
         {
             if (moveComponent.changeDirectionCooldown <= 0)
             {
-                float newAngle = Random.Range(-90f, 90f);
+                var newAngle = Random.Range(-90f, 90f);
                 Quaternion rotation = Quaternion.AngleAxis(newAngle, Vector3.forward);
                 moveComponent.direction = rotation * moveComponent.direction;
 
