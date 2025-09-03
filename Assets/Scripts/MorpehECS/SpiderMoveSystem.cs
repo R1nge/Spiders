@@ -14,13 +14,11 @@ namespace MorpehECS
         private Filter _moveFilter;
         private Stash<SpiderMoveComponent> _spiderMoveStash;
 
-        private Unity.Mathematics.Random _random;
         private Camera _camera;
         private float _screenWidth, _screenHeight;
 
         public override void OnAwake()
         {
-            _random = Unity.Mathematics.Random.CreateFromIndex((uint)Entrypoint.Instance.RandomIndex);
             ComponentId<SpiderMoveComponent>.StashSize = Entrypoint.Instance.SpidersCount;
             
             _moveFilter = World.Filter.With<SpiderMoveComponent>().Build();
@@ -32,8 +30,8 @@ namespace MorpehECS
             foreach (var entity in _moveFilter)
             {
                 ref var spiderMoveComponent = ref _spiderMoveStash.Get(entity);
-                spiderMoveComponent.moveSpeed = _random.NextFloat(2f, 6f);
-                spiderMoveComponent.rotateSpeed = _random.NextFloat(90f, 180f);
+                spiderMoveComponent.moveSpeed = Entrypoint.Instance.Random.NextFloat(2f, 6f);
+                spiderMoveComponent.rotateSpeed = Entrypoint.Instance.Random.NextFloat(90f, 180f);
                 spiderMoveComponent.direction = Vector2.up;
             }
         }
@@ -62,11 +60,11 @@ namespace MorpehECS
         {
             if (moveComponent.changeDirectionCooldown <= 0)
             {
-                var newAngle = _random.NextFloat(-90f, 90f);
+                var newAngle = Entrypoint.Instance.Random.NextFloat(-90f, 90f);
                 Quaternion rotation = Quaternion.AngleAxis(newAngle, Vector3.forward);
                 moveComponent.direction = rotation * moveComponent.direction;
 
-                moveComponent.changeDirectionCooldown = _random.NextFloat(1f, 5f);
+                moveComponent.changeDirectionCooldown = Entrypoint.Instance.Random.NextFloat(1f, 5f);
             }
         }
 

@@ -55,24 +55,17 @@ public struct SpiderJob : IJob
         _targetDirectionResult = targetDirectionResult;
         _positionResult = positionResult;
         _rotationResult = rotationResult;
-        _random = new Unity.Mathematics.Random(seed);
+        _random = Unity.Mathematics.Random.CreateFromIndex(seed);
     }
 
 
     public void Execute()
     {
         TickTimer();
-        UpdateTargetDirection();
-        RotateTowardsTarget();
-        SetPosition();
-    }
-
-    private void UpdateTargetDirection()
-    {
         ChangeDirection();
         HandleOffScreen();
-
-        _targetDirectionResult[0] = _targetDirection;
+        RotateTowardsTarget();
+        SetPosition();
     }
 
     private void TickTimer()
@@ -87,7 +80,7 @@ public struct SpiderJob : IJob
             float newAngle = _random.NextFloat(-90f, 90f);
             Quaternion rotation = Quaternion.AngleAxis(newAngle, Vector3.forward);
             _targetDirection = rotation * _targetDirection;
-
+            _targetDirectionResult[0] = _targetDirection;
             _changeDirectionCooldown = _random.NextFloat(1f, 5f);
         }
 
@@ -100,12 +93,14 @@ public struct SpiderJob : IJob
             (_screenPoint.x > _screenWidth && _targetDirection.x > 0))
         {
             _targetDirection = new Vector2(-_targetDirection.x, _targetDirection.y);
+            _targetDirectionResult[0] = _targetDirection;
         }
 
         if (_screenPoint.y < 0 && _targetDirection.y < 0 ||
             (_screenPoint.y > _screenHeight && _targetDirection.y > 0))
         {
             _targetDirection = new Vector2(_targetDirection.x, -_targetDirection.y);
+            _targetDirectionResult[0] = _targetDirection;
         }
     }
 

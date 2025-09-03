@@ -25,8 +25,8 @@ public class SpiderMove : MonoBehaviour
         _cachedTransform = transform;
         _camera = Camera.main;
         _targetDirection = Vector2.up;
-        _moveSpeed = Random.Range(2f, 6f);
-        _rotationSpeed = Random.Range(90f, 180f);
+        _moveSpeed = Entrypoint.Instance.Random.NextFloat(2f, 6f);
+        _rotationSpeed = Entrypoint.Instance.Random.NextFloat(90f, 180f);
 
         _coolDownResult = new NativeArray<float>(1, Allocator.Persistent);
         _targetDirectionResult = new NativeArray<Vector2>(1, Allocator.Persistent);
@@ -63,13 +63,10 @@ public class SpiderMove : MonoBehaviour
     {
         _jobHandle.Complete();
 
-        if (_jobHandle.IsCompleted)
-        {
-            _targetDirection = _targetDirectionResult[0];
-            _coolDown = _coolDownResult[0];
-            transform.position = _positionResult[0];
-            transform.rotation = _rotationResult[0];
-        }
+        _targetDirection = _targetDirectionResult[0];
+        _coolDown = _coolDownResult[0];
+        transform.position = _positionResult[0];
+        transform.rotation = _rotationResult[0];
     }
 
     private void OnDestroy()
