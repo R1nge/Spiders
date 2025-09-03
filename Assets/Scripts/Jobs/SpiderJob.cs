@@ -30,7 +30,7 @@ public struct SpiderJob : IJob
         float moveSpeed,
         float rotationSpeed,
         float deltaTime,
-        uint seed,
+        Unity.Mathematics.Random random,
         Vector2 screenPoint,
         int screenWidth,
         int screenHeight,
@@ -46,6 +46,7 @@ public struct SpiderJob : IJob
         _moveSpeed = moveSpeed;
         _rotationSpeed = rotationSpeed;
         _deltaTime = deltaTime;
+        _random = random;
         _screenPoint = screenPoint;
         _screenWidth = screenWidth;
         _screenHeight = screenHeight;
@@ -55,7 +56,6 @@ public struct SpiderJob : IJob
         _targetDirectionResult = targetDirectionResult;
         _positionResult = positionResult;
         _rotationResult = rotationResult;
-        _random = Unity.Mathematics.Random.CreateFromIndex(seed);
     }
 
 

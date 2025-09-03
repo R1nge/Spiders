@@ -44,7 +44,7 @@ public class SpiderMove : MonoBehaviour
             _moveSpeed,
             _rotationSpeed,
             Time.deltaTime,
-            (uint)Entrypoint.Instance.RandomIndex,
+            Entrypoint.Instance.Random,
             screenPoint,
             _camera.pixelWidth,
             _camera.pixelHeight,
