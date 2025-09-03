@@ -49,7 +49,7 @@ namespace MorpehECS
                 ChangeDirection(ref move);
                 HandleOffScreen(ref move, screenPoint);
                 RotateTowardsTarget(ref move, deltaTime);
-                move.transform.Translate(move.transform.up * speed * Time.deltaTime, Space.World);
+                move.transform.Translate(move.transform.up * speed * deltaTime, Space.World);
             }
         }
 
@@ -66,7 +66,7 @@ namespace MorpehECS
                 Quaternion rotation = Quaternion.AngleAxis(newAngle, Vector3.forward);
                 moveComponent.direction = rotation * moveComponent.direction;
 
-                moveComponent.changeDirectionCooldown = Random.Range(1f, 5f);
+                moveComponent.changeDirectionCooldown = _random.NextFloat(1f, 5f);
             }
         }
 
