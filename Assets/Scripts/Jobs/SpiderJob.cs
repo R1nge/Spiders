@@ -61,6 +61,7 @@ public struct SpiderJob : IJob
 
     public void Execute()
     {
+        _targetDirectionResult[0] = _targetDirection;
         TickTimer();
         ChangeDirection();
         HandleOffScreen();

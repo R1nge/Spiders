@@ -27,7 +27,7 @@ public class SpiderMove : MonoBehaviour
         _targetDirection = Vector2.up;
         _moveSpeed = Entrypoint.Instance.Random.NextFloat(2f, 6f);
         _rotationSpeed = Entrypoint.Instance.Random.NextFloat(90f, 180f);
-
+        _coolDown = Entrypoint.Instance.Random.NextFloat(1f, 5f);
         _coolDownResult = new NativeArray<float>(1, Allocator.Persistent);
         _targetDirectionResult = new NativeArray<Vector2>(1, Allocator.Persistent);
         _positionResult = new NativeArray<Vector2>(1, Allocator.Persistent);
@@ -37,6 +37,8 @@ public class SpiderMove : MonoBehaviour
     private void Update()
     {
         var screenPoint = _camera.WorldToScreenPoint(_cachedTransform.position);
+
+        Debug.Log($"Target direction input {_targetDirection}");
 
         var job = new SpiderJob(
             _targetDirection,
@@ -67,6 +69,8 @@ public class SpiderMove : MonoBehaviour
         _coolDown = _coolDownResult[0];
         transform.position = _positionResult[0];
         transform.rotation = _rotationResult[0];
+
+        Debug.Log($"$Target direction output: {_targetDirectionResult[0]}");
     }
 
     private void OnDestroy()
