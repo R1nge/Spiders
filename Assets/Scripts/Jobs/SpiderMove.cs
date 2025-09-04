@@ -28,6 +28,7 @@ public class SpiderMove : MonoBehaviour
         _moveSpeed = Entrypoint.Instance.Random.NextFloat(2f, 6f);
         _rotationSpeed = Entrypoint.Instance.Random.NextFloat(90f, 180f);
         _coolDown = Entrypoint.Instance.Random.NextFloat(1f, 5f);
+        Entrypoint.Instance.PickNewRandom();
         _coolDownResult = new NativeArray<float>(1, Allocator.Persistent);
         _targetDirectionResult = new NativeArray<Vector2>(1, Allocator.Persistent);
         _positionResult = new NativeArray<Vector2>(1, Allocator.Persistent);
@@ -37,6 +38,7 @@ public class SpiderMove : MonoBehaviour
     private void Update()
     {
         var screenPoint = _camera.WorldToScreenPoint(_cachedTransform.position);
+        Entrypoint.Instance.PickNewRandom();
 
         var job = new SpiderJob(
             _targetDirection,

@@ -20,7 +20,7 @@ namespace MorpehECS
         public override void OnAwake()
         {
             ComponentId<SpiderMoveComponent>.StashSize = Entrypoint.Instance.SpidersCount;
-            
+
             _moveFilter = World.Filter.With<SpiderMoveComponent>().Build();
             _spiderMoveStash = World.GetStash<SpiderMoveComponent>();
             _camera = Camera.main;
@@ -33,6 +33,7 @@ namespace MorpehECS
                 spiderMoveComponent.moveSpeed = Entrypoint.Instance.Random.NextFloat(2f, 6f);
                 spiderMoveComponent.rotateSpeed = Entrypoint.Instance.Random.NextFloat(90f, 180f);
                 spiderMoveComponent.direction = Vector2.up;
+                Entrypoint.Instance.PickNewRandom();
             }
         }
 
@@ -65,6 +66,7 @@ namespace MorpehECS
                 moveComponent.direction = rotation * moveComponent.direction;
 
                 moveComponent.changeDirectionCooldown = Entrypoint.Instance.Random.NextFloat(1f, 5f);
+                Entrypoint.Instance.PickNewRandom();
             }
         }
 
