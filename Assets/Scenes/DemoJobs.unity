@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Entrypoint
   randomIndex: 12345
-  spidersCount: 1
+  spidersCount: 8500
 --- !u!4 &112183852
 Transform:
   m_ObjectHideFlags: 0

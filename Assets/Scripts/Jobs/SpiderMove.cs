@@ -38,8 +38,6 @@ public class SpiderMove : MonoBehaviour
     {
         var screenPoint = _camera.WorldToScreenPoint(_cachedTransform.position);
 
-        Debug.Log($"Target direction input {_targetDirection}");
-
         var job = new SpiderJob(
             _targetDirection,
             _coolDown,
@@ -65,12 +63,13 @@ public class SpiderMove : MonoBehaviour
     {
         _jobHandle.Complete();
 
-        _targetDirection = _targetDirectionResult[0];
-        _coolDown = _coolDownResult[0];
-        transform.position = _positionResult[0];
-        transform.rotation = _rotationResult[0];
-
-        Debug.Log($"$Target direction output: {_targetDirectionResult[0]}");
+        if (_jobHandle.IsCompleted)
+        {
+            _targetDirection = _targetDirectionResult[0];
+            _coolDown = _coolDownResult[0];
+            transform.position = _positionResult[0];
+            transform.rotation = _rotationResult[0];
+        }
     }
 
     private void OnDestroy()
