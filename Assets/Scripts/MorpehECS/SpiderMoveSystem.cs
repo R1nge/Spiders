@@ -1,4 +1,5 @@
 ﻿using Scellecs.Morpeh;
+using Scellecs.Morpeh.Native;
 using Scellecs.Morpeh.Systems;
 using Unity.IL2CPP.CompilerServices;
 using UnityEngine;
@@ -11,7 +12,7 @@ namespace MorpehECS
     [CreateAssetMenu(menuName = "ECS/Systems/" + nameof(SpiderMoveSystem))]
     public class SpiderMoveSystem : UpdateSystem
     {
-        private Filter _moveFilter;
+        private NativeFilter _moveFilter;
         private Stash<SpiderMoveComponent> _spiderMoveStash;
 
         private Camera _camera;
@@ -21,7 +22,7 @@ namespace MorpehECS
         {
             ComponentId<SpiderMoveComponent>.StashSize = Entrypoint.Instance.SpidersCount;
             
-            _moveFilter = World.Filter.With<SpiderMoveComponent>().Build();
+            _moveFilter = World.Filter.With<SpiderMoveComponent>().Build().AsNative();
             _spiderMoveStash = World.GetStash<SpiderMoveComponent>();
             _camera = Camera.main;
             _screenWidth = _camera.pixelWidth;
