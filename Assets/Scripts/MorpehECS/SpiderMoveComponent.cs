@@ -9,8 +9,8 @@ namespace MorpehECS
     public struct SpiderMoveComponent : IComponent
     {
         public float changeDirectionCooldown;
-        public float moveSpeed;
         public Vector2 direction;
         public float rotateSpeed;
+        public Quaternion rotation;
     }
 }

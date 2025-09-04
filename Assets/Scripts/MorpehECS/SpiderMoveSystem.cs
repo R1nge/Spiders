@@ -22,30 +22,35 @@ namespace MorpehECS
         public override void OnAwake()
         {
             ComponentId<SpiderMoveComponent>.StashSize = Entrypoint.Instance.SpidersCount;
-            
+
             _moveFilter = World.Filter.With<SpiderMoveComponent>().Build().AsNative();
             _spiderMoveStash = World.GetStash<SpiderMoveComponent>();
             _camera = Camera.main;
             _screenWidth = _camera.pixelWidth;
             _screenHeight = _camera.pixelHeight;
 
-            foreach (var entity in _moveFilter)
+            var initJob = new SpiderInitJobEcs
             {
-                ref var spiderMoveComponent = ref _spiderMoveStash.Get(entity);
-                spiderMoveComponent.moveSpeed = Entrypoint.Instance.Random.NextFloat(2f, 6f);
-                spiderMoveComponent.rotateSpeed = Entrypoint.Instance.Random.NextFloat(90f, 180f);
-                spiderMoveComponent.direction = Vector2.up;
-            }
+                entities = _moveFilter,
+                moveComponents = _spiderMoveStash.AsNative()
+            };
+
+            World.JobHandle = initJob.Schedule(_moveFilter.length, 64, World.JobHandle);
         }
 
         public override void OnUpdate(float deltaTime)
         {
-            var parallelJob = new SpiderJobECS {
-                entities = _moveFilter,
-                moveComponent = _spiderMoveStash.AsNative(),
+            var moveJob = new SpiderJobECS
+            {
+                Entities = _moveFilter,
+                MoveComponents = _spiderMoveStash.AsNative(),
+                ScreenWidth = _screenWidth,
+                ScreenHeight = _screenHeight,
+                ScreenPoint = Vector2.zero,
+                DeltaTime = deltaTime
             };
-            
-            World.JobHandle = parallelJob.Schedule(_moveFilter.length, 64, World.JobHandle);
+
+            World.JobHandle = moveJob.Schedule(_moveFilter.length, 64, World.JobHandle);
         }
     }
 }
